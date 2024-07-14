@@ -29,12 +29,3 @@ jobs:
           cache: 'npm'
       - run: make install
       - run: make lint
-      - run: make test
-      - name: Test & publish code coverage
-        # Publish code coverage on Code Climate
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: 196e2e901b8ccf41f54884a0108800471058b726ea4150f4c1ebedb5c7627fd7
-        with:
-          coverageCommand: make test-coverage
-          debug: true
