@@ -6,15 +6,19 @@
     <title>Bootstrap w/ Webpack</title>
   </head>
   <body>
-    <div class="container py-4 px-3 mx-auto">
-        <div class="row">
-            <div class="col-sm-8">
-                <input type="text" placeholder="RSS link"/>
+    <div id="container" class="container py-4 px-3 mx-auto">
+      <div id="form-container">
+        <form id="form">
+          <div class="row">
+            <div id="form-input" class="col-sm-8">
+              <input type="text" name="input" placeholder="RSS link"/>
             </div>
-            <div class="col-sm-4">
-                <button class="btn btn-primary">Add</button>
+            <div id="form-button" class="col-sm-4">
+              <button class="btn btn-primary" name="button">Add</button>
             </div>
-        </div>
+          </div>
+        </form>
+      </div>
     </div>
   </body>
 </html>
