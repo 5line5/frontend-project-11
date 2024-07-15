@@ -1,3 +1,6 @@
+// temporary stubs
+/* eslint-disable max-len */
+/* eslint-disable no-nested-ternary */
 import { string } from 'yup';
 
 export default class Model {
@@ -14,17 +17,11 @@ export default class Model {
           this.state.form.rssUrls.push(url);
         }
 
-        this.state.form.errors = validationResult.errors;
+        this.state.form.errorCode = validationResult.errorCode;
       });
   };
 
-  isValid = (url) => this.urlsSchema.validate(url)
-    .then(() => {
-      if (this.state.form.rssUrls.includes(url)) {
-        throw new Error(`URL ${url} has already been added`);
-      }
-
-      return { isValid: true, errors: [] };
-    })
-    .catch((error) => ({ isValid: false, errors: [error.message] }));
+  isValid = (url) => this.urlsSchema.isValid(url)
+    .then((isUrl) => (!isUrl ? { isValid: false, errorCode: 2 }
+      : (this.state.form.rssUrls.includes(url) ? { isValid: false, errorCode: 1 } : { isValid: true, errorCode: 0 })));
 }

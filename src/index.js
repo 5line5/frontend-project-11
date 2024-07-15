@@ -10,7 +10,7 @@ function app() {
   const initState = {
     form: {
       rssUrls: [],
-      errors: [],
+      errorCode: 0,
     },
   };
 
