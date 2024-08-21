@@ -1,24 +1,52 @@
 // Import our custom CSS
 import '../scss/styles.scss';
+import { errorCodes, errors } from './constants/errors.js';
+import Model from './MVC/model/model.js';
 // Import all of Bootstrap's JS
 // import * as bootstrap from 'bootstrap';
-import View from './MVC/view.js';
-import Controller from './MVC/controller.js';
-import Model from './MVC/model.js';
+import View from './MVC/view/view.js';
 
 function app() {
   const initState = {
-    form: {
-      rssUrls: [],
-      errorCode: 0,
+    formState: {
+      input: '',
+      validationCode: undefined,
+    },
+    feedsState: {
+      feeds: [
+        /*
+        {
+          link: link,
+          title: feedTitle,
+          description: feedDescription,
+          id: feedId
+        }
+        */
+      ],
+      posts: [
+        /*
+        {
+          link: postLink,
+          title: postTitle,
+          description: postDescription,
+          id: postId,
+          feedId: feedId
+        }
+        */
+      ],
+      UI: {
+        /*
+          feedId: {
+            show: true || false,
+          }
+        */
+      },
     },
   };
 
-  const view = new View();
-  const watchedState = view.getWatchedState(initState);
-  const model = new Model(watchedState);
-  const controller = new Controller(model);
-  controller.addHandlers();
+  const model = new Model(initState);
+
+  View.renderForm(model);
 }
 
 app();

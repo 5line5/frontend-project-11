@@ -1,19 +1,16 @@
 /* eslint-env browser */
 
 export default class Controller {
-  constructor(model) {
-    this.model = model;
-    this.formContainer = document.getElementById('form-container');
-  }
+  static submitHandler = (model) => (event) => {
+    event.preventDefault();
 
-  addHandlers = () => {
-    this.formContainer.addEventListener('submit', (event) => {
-      event.preventDefault();
+    const formData = new FormData(event.target);
+    const inputValue = formData.get('input');
 
-      const formData = new FormData(event.target);
-      const inputValue = formData.get('input');
+    model.addFeed(inputValue);
+  };
 
-      this.model.updateState(inputValue);
-    });
+  static feedClickHandler = (id, model) => () => {
+    model.updateShownFeeds(id);
   };
 }

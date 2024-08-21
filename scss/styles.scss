@@ -1,1 +1,54 @@
 @import "bootstrap/scss/bootstrap";
+
+::-webkit-scrollbar { /* chrome based */
+    width: 0px;  /* ширина scrollbar'a */
+    background: transparent;  /* опционально */
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+#separator {
+    position: relative;
+}
+
+#vertical-line {
+    position: absolute;
+    background: black;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+}
+
+#feeds-container {
+    height: 70vh;
+    overflow: hidden;
+    display: block;
+}
+
+.posts-list, .feeds-list {
+    height: 70vh;
+
+    overflow: scroll;
+}
+
+.hide {
+    display: none;
+}
+
+.title {
+    padding-left: 1rem;
+}
+
+.feed {
+    transition: all 0.6s;
+}
+
+.feed:hover {
+    transform: scale(1.05);
+}
+
+.choosed {
+    scale: 1.05;
+}

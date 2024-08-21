@@ -2,23 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap w/ Webpack</title>
+    <title>RSS Aggregator</title>
   </head>
   <body>
-    <div id="container" class="container py-4 px-3 mx-auto">
-      <div id="form-container">
-        <form id="form">
-          <div class="row">
-            <div id="form-input" class="col-sm-8">
-              <input type="text" name="input" placeholder="RSS link"/>
-            </div>
-            <div id="form-button" class="col-sm-4">
-              <button class="btn btn-primary" name="button">Add</button>
-            </div>
+    <div id="container">
+      <section id="form-container" class="container-fluid bg-dark p-5"></section>
+      <section id="feeds-container" class="container-fluid container-xxl p-5">
+        <div class="row">
+          <div id="posts" class="col-8"></div>
+          <div id="separator" class="col-auto">
+            <div id="vertical-line"></div>
           </div>
-        </form>
-      </div>
+          <div id="feeds" class="col"></div>
+        </div>
+      </section>
     </div>
   </body>
 </html>
