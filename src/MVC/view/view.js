@@ -5,6 +5,7 @@ import i18next from 'i18next';
 import resources from './constants/resources.js';
 import Controller from '../controller.js';
 import { errorCodes, errors } from '../../constants/errors.js';
+import * as bootstrap from 'bootstrap';
 
 i18next.init({
   lng: 'ru',
@@ -82,7 +83,7 @@ export default class View {
 
       const liElement = document.createElement('li');
       liElement.classList.add('list-group-item', 'feed');
-      if (model.state.feedsState.UI[id].show) {
+      if (model.state.feedsState.UI.feeds[id].show) {
         liElement.classList.add('choosed');
       }
       liElement.appendChild(titleNode);
@@ -111,20 +112,39 @@ export default class View {
 
     const posts = model.state.feedsState.posts
       .map(({
-        link, title, feedId,
+        id, link, title, feedId, description,
       }) => {
         const text = document.createTextNode(title);
 
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', link);
+        linkElement.classList.add('link-underline', 'link-underline-opacity-0', model.state.feedsState.UI.posts[id].isRed ? 'link-secondary' : 'link-primary');
         linkElement.appendChild(text);
 
+        const viewButton = document.createElement('button');
+        viewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+        viewButton.addEventListener('click', () => {
+          console.log('aaa');
+          Controller.postReadButtonClick(id, model);
+
+          document.getElementById('modal-title').textContent = title;
+          document.getElementById('modal-body').textContent = description;
+          document.getElementById('modal-primary-button').textContent = 'Читать полностью';
+          document.getElementById('modal-primary-button').setAttribute('href', link);
+          document.getElementById('modal-secondary-button').textContent = 'Закрыть';
+          const modal = new bootstrap.Modal(document.getElementById('modal'));
+
+          modal.show();
+        });
+        viewButton.appendChild(document.createTextNode('Просмотр'));
+
         const liElement = document.createElement('li');
-        liElement.classList.add('list-group-item', 'post');
-        if (!model.state.feedsState.UI[feedId].show) {
+        liElement.classList.add('list-group-item', 'post', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+        if (!model.state.feedsState.UI.feeds[feedId].show) {
           liElement.classList.add('hide');
         }
         liElement.appendChild(linkElement);
+        liElement.appendChild(viewButton);
 
         return liElement;
       });

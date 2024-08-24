@@ -5,6 +5,21 @@
     <title>RSS Aggregator</title>
   </head>
   <body>
+    <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modal-body"></div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" role="button" id="modal-primary-button"></a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal-secondary-button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="container">
       <section id="form-container" class="container-fluid bg-dark p-5"></section>
       <section id="feeds-container" class="container-fluid container-xxl p-5">
@@ -17,5 +32,6 @@
         </div>
       </section>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> 
   </body>
 </html>

@@ -13,4 +13,8 @@ export default class Controller {
   static feedClickHandler = (id, model) => () => {
     model.updateShownFeeds(id);
   };
+
+  static postReadButtonClick = (id, model) => {
+    model.updateRedPosts(id);
+  };
 }

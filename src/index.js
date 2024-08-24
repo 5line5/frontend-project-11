@@ -35,11 +35,20 @@ function app() {
         */
       ],
       UI: {
+        feeds: {
         /*
           feedId: {
-            show: true || false,
+            haveToShow: true || false,
           }
         */
+        },
+        posts: {
+        /*
+          postId: {
+            isRed: true || false,
+          }
+        */
+        },
       },
     },
   };

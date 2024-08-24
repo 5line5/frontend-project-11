@@ -27,7 +27,10 @@ export default class Model {
       .then(({ feed, posts }) => {
         this.state.formState.input = '';
         this.state.formState.validationCode = errorCodes[errors.NoError];
-        this.state.feedsState.UI[feed.id] = { show: false };
+        this.state.feedsState.UI.feeds[feed.id] = { show: false };
+        posts
+          // eslint-disable-next-line no-return-assign
+          .forEach(({ id }) => this.state.feedsState.UI.posts[id] = { isRed: false });
         this.state.feedsState.feeds.push({ link, ...feed });
         this.state.feedsState.posts.push(...posts);
       })
@@ -39,7 +42,11 @@ export default class Model {
   };
 
   updateShownFeeds = (feedId) => {
-    this.state.feedsState.UI[feedId].show = !this.state.feedsState.UI[feedId].show;
+    this.state.feedsState.UI.feeds[feedId].show = !this.state.feedsState.UI.feeds[feedId].show;
+  };
+
+  updateRedPosts = (postId) => {
+    this.state.feedsState.UI.posts[postId].isRed = true;
   };
 
   #updateFeeds = () => {
@@ -54,6 +61,10 @@ export default class Model {
         const filteredPosts = posts
           .filter((newPost) => !statePosts.some((oldPost) => oldPost.title === newPost.title));
 
+        if (!filteredPosts.length) {
+          return;
+        }
+
         this.state.feedsState.posts.unshift(...filteredPosts);
       })
       // If catch error just print it in console
@@ -64,7 +75,7 @@ export default class Model {
   };
 
   #getWatchedState = (state) => {
-    const watchedState = onChange(state, (path) => {
+    const watchedState = onChange(state, (path, value) => {
       if (path === 'formState.input' || path === 'formState.validationCode') {
         View.renderForm(this);
         return;
@@ -79,6 +90,7 @@ export default class Model {
         View.renderFeeds(this);
       }
       if (component === 'posts') {
+        console.log(value)
         View.renderPosts(this);
       }
     });
