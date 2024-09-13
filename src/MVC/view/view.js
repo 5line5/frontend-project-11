@@ -2,10 +2,12 @@
 /* eslint-env browser */
 /* eslint-disable no-param-reassign */
 import i18next from 'i18next';
+import { Modal } from 'bootstrap';
 import resources from './constants/resources.js';
 import Controller from '../controller.js';
 import { errorCodes, errors } from '../../constants/errors.js';
-import * as bootstrap from 'bootstrap';
+import generateNode from './utils/nodeWorker.js';
+import nodeTypes from './constants/nodeTypes.js';
 
 i18next.init({
   lng: 'ru',
@@ -16,46 +18,94 @@ export default class View {
   static renderForm = (model) => {
     const { validationCode } = model.state.formState;
     const shouldShowFeedBack = validationCode !== undefined;
-    const feedback = `<p class="feedback m-0 position-absolute small ${validationCode === errorCodes[errors.NoError] ? 'text-success' : 'text-danger'}">${i18next.t(`errors.${validationCode}`)}</p>`;
 
-    const input = `
-      <div class="form-floating">
-        <input type="text" name="input" class="form-control w-100" id="rssInput" placeholder="${i18next.t('form.placeholder')}" autocomplete="off">
-        <label for="rssInput">${i18next.t('form.placeholder')}</label>
-      </div>`;
-    const button = `<button class="btn btn-primary btn-lg h-100 w-100" type="submit">${i18next.t('form.button')}</button>`;
+    const input = {
+      tag: 'input',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'type', value: 'text' }, { name: 'name', value: 'input' }, { name: 'id', value: 'rssInput' }, { name: 'placeholder', value: i18next.t('form.placeholder') }, { name: 'autocomplete', value: 'off' }, { name: 'autofocus', value: true }],
+      classes: ['form-control'],
+    };
+    const inputLabel = {
+      tag: 'label',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'for', value: 'rssInput' }],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('form.placeholder') }],
+    };
+    const inputDiv = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['form-floating'],
+      children: [input, inputLabel],
+    };
+    const inputColumn = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['col'],
+      children: [inputDiv],
+    };
 
-    const form = `
-    <div id="div" class="col-lg-8 mx-auto text-grey">
-      <form>
-        <div class="row">
-          <div class="col">
-            ${input}
-          </div>
-          <div class="col-auto">
-            ${button}
-          </div>
-        </div>
-      </form>
-      <p class="mt-2 mb-0 text-muted">Пример: https://lorem-rss.hexlet.app/feed?legth=10</p>
-      ${shouldShowFeedBack ? feedback : ''};
-    </div>
-    `;
+    const button = {
+      tag: 'button',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'type', value: 'submit' }],
+      classes: ['btn', 'btn-primary', 'btn-lg', 'h-100', 'px-sm-5'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('form.button') }],
+    };
+    const buttonColumn = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['col-auto'],
+      children: [button],
+    };
 
-    const formBlock = (new DOMParser()).parseFromString(form, 'text/html').querySelector('[id="div"]');
+    const formRow = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['row'],
+      children: [inputColumn, buttonColumn],
+    };
 
-    const formElement = formBlock.querySelector('form');
-    formElement.addEventListener('submit', Controller.submitHandler(model));
+    const form = {
+      tag: 'form',
+      type: nodeTypes.HTMLElement,
+      handlers: [{ event: 'submit', cb: Controller.submitHandler(model) }],
+      children: [formRow],
+    };
+    const expample = {
+      tag: 'p',
+      type: nodeTypes.HTMLElement,
+      classes: ['mt-2', 'mb-0', 'text-muted'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('form.example') }],
+    };
+
+    const feedback = {
+      tag: 'p',
+      type: nodeTypes.HTMLElement,
+      classes: ['feedback', 'm-0', 'position-absolute', 'small', validationCode === errorCodes[errors.NoError] ? 'text-success' : 'text-danger'],
+      children: [{ type: nodeTypes.textNode, value: shouldShowFeedBack ? i18next.t(`errors.${validationCode}`) : '' }],
+    };
+
+    const col = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['col-lg-8', 'mx-auto'],
+      children: [form, expample, feedback],
+    };
+
+    const row = {
+      tag: 'div',
+      type: nodeTypes.HTMLElement,
+      classes: ['row'],
+      children: [col],
+    };
+
+    const node = generateNode(row);
 
     const formColumnSelector = '[id="form-container"]';
     const formColumnElement = document.querySelector(formColumnSelector);
 
     formColumnElement.childNodes.forEach((childNode) => childNode.remove());
-    formColumnElement.appendChild(formBlock);
-
-    const inputSelector = 'input[name="input"]';
-
-    document.querySelector(inputSelector).focus();
+    formColumnElement.appendChild(node);
   };
 
   static renderFeedsAndPosts = (model) => {
@@ -132,7 +182,7 @@ export default class View {
           document.getElementById('modal-primary-button').textContent = 'Читать полностью';
           document.getElementById('modal-primary-button').setAttribute('href', link);
           document.getElementById('modal-secondary-button').textContent = 'Закрыть';
-          const modal = new bootstrap.Modal(document.getElementById('modal'));
+          const modal = new Modal(document.getElementById('modal'));
 
           modal.show();
         });

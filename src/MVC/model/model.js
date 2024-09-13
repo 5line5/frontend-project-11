@@ -90,7 +90,7 @@ export default class Model {
         View.renderFeeds(this);
       }
       if (component === 'posts') {
-        console.log(value)
+        console.log(value);
         View.renderPosts(this);
       }
     });
