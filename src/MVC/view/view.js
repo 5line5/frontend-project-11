@@ -189,7 +189,7 @@ export default class View {
           tag: 'a',
           type: nodeTypes.HTMLElement,
           attributes: [{ name: 'href', value: link }],
-          classes: ['link-underline', 'link-underline-opacity-0', model.state.feedsState.UI.posts[id].isRed ? 'link-secondary' : ('link-primary', 'fw-bold')],
+          classes: [model.state.feedsState.UI.posts[id].isRed ? 'link-secondary' : ('link-primary', 'fw-bold')],
           children: [{ type: nodeTypes.textNode, value: title }],
         };
         const viewButtonElement = {
