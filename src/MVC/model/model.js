@@ -27,7 +27,7 @@ export default class Model {
       .then(({ feed, posts }) => {
         this.state.formState.input = '';
         this.state.formState.validationCode = errorCodes[errors.NoError];
-        this.state.feedsState.UI.feeds[feed.id] = { show: false };
+        this.state.feedsState.UI.feeds[feed.id] = { show: true };
         posts
           // eslint-disable-next-line no-return-assign
           .forEach(({ id }) => this.state.feedsState.UI.posts[id] = { isRed: false });
