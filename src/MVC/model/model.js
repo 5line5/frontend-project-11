@@ -47,7 +47,7 @@ export default class Model {
 
   updateRedPosts = (postId) => {
     this.state.feedsState.UI.posts[postId].isRed = true;
-    View.renderModal(this.state.feedsState.posts[postId]);
+    View.renderModal(this.state.feedsState.posts.find(({ id }) => id === postId));
   };
 
   #updateFeeds = () => {

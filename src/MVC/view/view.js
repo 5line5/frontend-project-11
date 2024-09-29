@@ -195,6 +195,7 @@ export default class View {
         const viewButtonElement = {
           tag: 'button',
           type: nodeTypes.HTMLElement,
+          attributes: [{ name: 'data-bs-toggle', value: 'modal' }, { name: 'data-bs-target', value: '#modal' }],
           classes: ['btn', 'btn-outline-primary', 'btn-sm'],
           handlers: [{ event: 'click', cb: Controller.postReadButtonClick(id, model) }],
           children: [{ type: nodeTypes.textNode, value: i18next.t('content.posts.preview') }],
@@ -282,7 +283,7 @@ export default class View {
     document.querySelector(modalFooterSelector).append(generateNode(closeButtonFooterElement));
 
     // Showing modal
-    const modal = new Modal(document.getElementById('modal'));
-    modal.show();
+    // const modal = new Modal(document.getElementById('modal'));
+    // modal.show();
   };
 }
