@@ -122,37 +122,48 @@ export default class View {
     const childNodes = [...document.querySelector(feedsContainerSelector).childNodes];
     childNodes.forEach((childNode) => childNode.remove());
 
+    const sectionTitleElement = {
+      tag: 'h3',
+      type: nodeTypes.HTMLElement,
+      classes: ['title'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('content.feeds.title') }],
+    };
+
     const feeds = model.state.feedsState.feeds.map(({ title, description, id }) => {
-      const titleNode = document.createElement('h3');
-      titleNode.classList.add('h6', 'm-0');
-      titleNode.appendChild(document.createTextNode(title));
+      const titileElement = {
+        tag: 'h3',
+        type: nodeTypes.HTMLElement,
+        classes: ['h6', 'm-0'],
+        children: [{ type: nodeTypes.textNode, value: title }],
+      };
 
-      const descriptionNode = document.createElement('p');
-      descriptionNode.classList.add('m-0', 'small', 'text-black-50');
-      descriptionNode.appendChild(document.createTextNode(description));
+      const descriptionElement = {
+        tag: 'p',
+        type: nodeTypes.HTMLElement,
+        classes: ['m-0', 'small', 'text-black-50'],
+        children: [{ type: nodeTypes.textNode, value: description }],
+      };
 
-      const liElement = document.createElement('li');
-      liElement.classList.add('list-group-item', 'feed');
-      if (model.state.feedsState.UI.feeds[id].show) {
-        liElement.classList.add('choosed');
-      }
-      liElement.appendChild(titleNode);
-      liElement.appendChild(descriptionNode);
-      liElement.addEventListener('click', Controller.feedClickHandler(id, model));
+      const liElement = {
+        tag: 'li',
+        type: nodeTypes.HTMLElement,
+        classes: ['list-group-item', 'feed', model.state.feedsState.UI.feeds[id].show ? 'choosed' : 'a'],
+        handlers: [{ event: 'click', cb: Controller.feedClickHandler(id, model) }],
+        children: [titileElement, descriptionElement],
+      };
 
       return liElement;
     });
 
-    const title = document.createElement('h3');
-    title.classList.add('title');
-    title.appendChild(document.createTextNode('Feeds'));
-    document.querySelector(feedsContainerSelector).appendChild(title);
+    const ulElement = {
+      tag: 'ul',
+      type: nodeTypes.HTMLElement,
+      classes: ['list-group', 'list-group-flush', 'feeds-list'],
+      children: feeds,
+    };
 
-    const list = document.createElement('ul');
-    list.classList.add('list-group', 'list-group-flush', 'feeds-list');
-    feeds.forEach((post) => list.appendChild(post));
-
-    document.querySelector(feedsContainerSelector).appendChild(list);
+    document.querySelector(feedsContainerSelector).appendChild(generateNode(sectionTitleElement));
+    document.querySelector(feedsContainerSelector).appendChild(generateNode(ulElement));
   };
 
   static renderPosts = (model) => {
@@ -160,54 +171,118 @@ export default class View {
     const childNodes = [...document.querySelector(postsContainerSelector).childNodes];
     childNodes.forEach((childNode) => childNode.remove());
 
-    const posts = model.state.feedsState.posts
+    const sectionTitleElement = {
+      tag: 'h3',
+      type: nodeTypes.HTMLElement,
+      classes: ['title'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('content.posts.title') }],
+    };
+
+    const shownPosts = model.state.feedsState.posts
+      .filter(({ feedId }) => model.state.feedsState.UI.feeds[feedId].show);
+
+    const posts = shownPosts
       .map(({
-        id, link, title, feedId, description,
+        id, link, title,
       }) => {
-        const text = document.createTextNode(title);
+        const linkElement = {
+          tag: 'a',
+          type: nodeTypes.HTMLElement,
+          attributes: [{ name: 'href', value: link }],
+          classes: ['link-underline', 'link-underline-opacity-0', model.state.feedsState.UI.posts[id].isRed ? 'link-secondary' : 'link-primary'],
+          children: [{ type: nodeTypes.textNode, value: title }],
+        };
+        const viewButtonElement = {
+          tag: 'button',
+          type: nodeTypes.HTMLElement,
+          classes: ['btn', 'btn-outline-primary', 'btn-sm'],
+          handlers: [{ event: 'click', cb: Controller.postReadButtonClick(id, model) }],
+          children: [{ type: nodeTypes.textNode, value: i18next.t('content.posts.preview') }],
+        };
 
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', link);
-        linkElement.classList.add('link-underline', 'link-underline-opacity-0', model.state.feedsState.UI.posts[id].isRed ? 'link-secondary' : 'link-primary');
-        linkElement.appendChild(text);
-
-        const viewButton = document.createElement('button');
-        viewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-        viewButton.addEventListener('click', () => {
-          console.log('aaa');
-          Controller.postReadButtonClick(id, model);
-
-          document.getElementById('modal-title').textContent = title;
-          document.getElementById('modal-body').textContent = description;
-          document.getElementById('modal-primary-button').textContent = 'Читать полностью';
-          document.getElementById('modal-primary-button').setAttribute('href', link);
-          document.getElementById('modal-secondary-button').textContent = 'Закрыть';
-          const modal = new Modal(document.getElementById('modal'));
-
-          modal.show();
-        });
-        viewButton.appendChild(document.createTextNode('Просмотр'));
-
-        const liElement = document.createElement('li');
-        liElement.classList.add('list-group-item', 'post', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-        if (!model.state.feedsState.UI.feeds[feedId].show) {
-          liElement.classList.add('hide');
-        }
-        liElement.appendChild(linkElement);
-        liElement.appendChild(viewButton);
+        const liElement = {
+          tag: 'li',
+          type: nodeTypes.HTMLElement,
+          classes: ['list-group-item', 'post', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0'],
+          children: [linkElement, viewButtonElement],
+        };
 
         return liElement;
       });
 
-    const title = document.createElement('h3');
-    title.classList.add('title');
-    title.appendChild(document.createTextNode('Posts'));
-    document.querySelector(postsContainerSelector).appendChild(title);
+    const ulElement = {
+      tag: 'ul',
+      type: nodeTypes.HTMLElement,
+      classes: ['list-group', 'list-group-flush', 'feeds-list'],
+      children: posts,
+    };
 
-    const list = document.createElement('ul');
-    list.classList.add('list-group', 'list-group-flush', 'posts-list');
-    posts.forEach((post) => list.appendChild(post));
+    document.querySelector(postsContainerSelector).appendChild(generateNode(sectionTitleElement));
+    document.querySelector(postsContainerSelector).appendChild(generateNode(ulElement));
+  };
 
-    document.querySelector(postsContainerSelector).appendChild(list);
+  static renderModal = (post) => {
+    const { title, description, link } = post;
+
+    // Generating modal header
+    const modalHeaderSelector = 'div[id="modal-header"]';
+    const modalHeaderChildNodes = [...document.querySelector(modalHeaderSelector).childNodes];
+    modalHeaderChildNodes.forEach((childNode) => childNode.remove());
+
+    const titleElement = {
+      tag: 'h5',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'id', value: 'modal-title' }],
+      classes: ['modal-title'],
+      children: [{ type: nodeTypes.textNode, value: title }],
+    };
+    const closeButtonHeaderElement = {
+      tag: 'button',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'type', value: 'button' }, { name: 'data-bs-dismiss', value: 'modal' }, { name: 'aria-label', value: 'Close' }],
+      classes: ['btn-close'],
+    };
+
+    document.querySelector(modalHeaderSelector).appendChild(generateNode(titleElement));
+    document.querySelector(modalHeaderSelector).appendChild(generateNode(closeButtonHeaderElement));
+
+    // Generating modal body
+    const modalBodySelector = 'div[id="modal-body"]';
+    const modalBodyChildNodes = [...document.querySelector(modalBodySelector).childNodes];
+    modalBodyChildNodes.forEach((childNode) => childNode.remove());
+
+    const bodyElement = {
+      type: nodeTypes.textNode,
+      value: description,
+    };
+
+    document.querySelector(modalBodySelector).append(generateNode(bodyElement));
+
+    // Generating modal footer
+    const modalFooterSelector = 'div[id="modal-footer"]';
+    const modalFooterChildNodes = [...document.querySelector(modalFooterSelector).childNodes];
+    modalFooterChildNodes.forEach((childNode) => childNode.remove());
+
+    const openButtonElement = {
+      tag: 'a',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'role', value: 'button' }, { name: 'id', value: 'modal-primary-button' }, { name: 'href', value: link }],
+      classes: ['btn', 'btn-primary'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('content.modal.read') }],
+    };
+    const closeButtonFooterElement = {
+      tag: 'button',
+      type: nodeTypes.HTMLElement,
+      attributes: [{ name: 'type', value: 'button' }, { name: 'data-bs-dismiss', value: 'modal' }, { name: 'id', value: 'modal-secondary-button' }],
+      classes: ['btn', 'btn-secondary'],
+      children: [{ type: nodeTypes.textNode, value: i18next.t('content.modal.close') }],
+    };
+
+    document.querySelector(modalFooterSelector).append(generateNode(openButtonElement));
+    document.querySelector(modalFooterSelector).append(generateNode(closeButtonFooterElement));
+
+    // Showing modal
+    const modal = new Modal(document.getElementById('modal'));
+    modal.show();
   };
 }

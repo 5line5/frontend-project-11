@@ -47,6 +47,7 @@ export default class Model {
 
   updateRedPosts = (postId) => {
     this.state.feedsState.UI.posts[postId].isRed = true;
+    View.renderModal(this.state.feedsState.posts[postId]);
   };
 
   #updateFeeds = () => {
@@ -65,6 +66,9 @@ export default class Model {
           return;
         }
 
+        filteredPosts
+        // eslint-disable-next-line no-return-assign
+          .forEach(({ id }) => this.state.feedsState.UI.posts[id] = { isRed: false });
         this.state.feedsState.posts.unshift(...filteredPosts);
       })
       // If catch error just print it in console
@@ -75,7 +79,7 @@ export default class Model {
   };
 
   #getWatchedState = (state) => {
-    const watchedState = onChange(state, (path, value) => {
+    const watchedState = onChange(state, (path) => {
       if (path === 'formState.input' || path === 'formState.validationCode') {
         View.renderForm(this);
         return;
@@ -90,7 +94,6 @@ export default class Model {
         View.renderFeeds(this);
       }
       if (component === 'posts') {
-        console.log(value);
         View.renderPosts(this);
       }
     });

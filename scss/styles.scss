@@ -1,10 +1,5 @@
 @import "bootstrap/scss/bootstrap";
 
-::-webkit-scrollbar { /* chrome based */
-    width: 0px;  /* ширина scrollbar'a */
-    background: transparent;  /* опционально */
-}
-
 .text-muted {
     color: #6c757d !important;
 }
@@ -21,26 +16,6 @@
     width: 1px;
 }
 
-#feeds-container {
-    height: 70vh;
-    overflow: hidden;
-    display: block;
-}
-
-.posts-list, .feeds-list {
-    height: 70vh;
-
-    overflow: scroll;
-}
-
-.posts-list {
-    font-weight: 700;
-}
-
-.hide {
-    display: none !important;
-}
-
 .title {
     padding-left: 1rem;
 }
@@ -55,19 +30,4 @@
 
 .choosed {
     scale: 1.05;
-}
-
-.bg-light {
-    background: white;
-}
-
-#modal {
-    word-wrap: break-word;    
-    word-break: break-word;
-}
-
-
-
-.w-65 {
-    width: 65% !important;
 }

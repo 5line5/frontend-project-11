@@ -1,8 +1,6 @@
 // Import our custom CSS
 import '../scss/styles.scss';
 import Model from './MVC/model/model.js';
-// Import all of Bootstrap's JS
-// import * as bootstrap from 'bootstrap';
 import View from './MVC/view/view.js';
 
 function app() {

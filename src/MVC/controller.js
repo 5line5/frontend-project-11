@@ -14,7 +14,7 @@ export default class Controller {
     model.updateShownFeeds(id);
   };
 
-  static postReadButtonClick = (id, model) => {
+  static postReadButtonClick = (id, model) => () => {
     model.updateRedPosts(id);
   };
 }
