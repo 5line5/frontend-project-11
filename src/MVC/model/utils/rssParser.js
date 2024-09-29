@@ -11,7 +11,7 @@ class RssParser {
   getFeedWithPosts = (rssString) => {
     const rssChannel = this.domParser.parseFromString(rssString, 'application/xml');
 
-    if (rssChannel.documentElement.nodeName === 'parsererror') {
+    if (rssChannel.querySelector('parsererror')) {
       throw new ParserError('Error while parsing XML');
     }
 
