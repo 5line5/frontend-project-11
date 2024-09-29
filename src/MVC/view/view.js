@@ -22,7 +22,7 @@ export default class View {
     const input = {
       tag: 'input',
       type: nodeTypes.HTMLElement,
-      attributes: [{ name: 'type', value: 'text' }, { name: 'name', value: 'input' }, { name: 'id', value: 'rssInput' }, { name: 'placeholder', value: i18next.t('form.placeholder') }, { name: 'autocomplete', value: 'off' }, { name: 'autofocus', value: true }],
+      attributes: [{ name: 'type', value: 'text' }, { name: 'name', value: 'input' }, { name: 'id', value: 'rssInput' }, { name: 'placeholder', value: i18next.t('form.placeholder') }, { name: 'autocomplete', value: 'off' }, { name: 'autofocus', value: true }, { name: 'aria-label', value: 'url' }],
       classes: ['form-control'],
     };
     const inputLabel = {
@@ -47,7 +47,7 @@ export default class View {
     const button = {
       tag: 'button',
       type: nodeTypes.HTMLElement,
-      attributes: [{ name: 'type', value: 'submit' }],
+      attributes: [{ name: 'type', value: 'submit' }, { name: 'aria-label', value: 'add' }],
       classes: ['btn', 'btn-primary', 'btn-lg', 'h-100', 'px-sm-5'],
       children: [{ type: nodeTypes.textNode, value: i18next.t('form.button') }],
     };
