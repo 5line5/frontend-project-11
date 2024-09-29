@@ -2,7 +2,6 @@
 /* eslint-env browser */
 /* eslint-disable no-param-reassign */
 import i18next from 'i18next';
-import { Modal } from 'bootstrap';
 import resources from './constants/resources.js';
 import Controller from '../controller.js';
 import { errorCodes, errors } from '../../constants/errors.js';
@@ -222,8 +221,8 @@ export default class View {
     document.querySelector(postsContainerSelector).appendChild(generateNode(ulElement));
   };
 
-  static renderModal = (post) => {
-    const { title, description, link } = post;
+  static renderModal = (model) => {
+    const { title, description, link } = model.state.modalState;
 
     // Generating modal header
     const modalHeaderSelector = 'div[id="modal-header"]';
@@ -281,9 +280,5 @@ export default class View {
 
     document.querySelector(modalFooterSelector).append(generateNode(openButtonElement));
     document.querySelector(modalFooterSelector).append(generateNode(closeButtonFooterElement));
-
-    // Showing modal
-    // const modal = new Modal(document.getElementById('modal'));
-    // modal.show();
   };
 }

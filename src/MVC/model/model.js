@@ -47,7 +47,10 @@ export default class Model {
 
   updateRedPosts = (postId) => {
     this.state.feedsState.UI.posts[postId].isRed = true;
-    View.renderModal(this.state.feedsState.posts.find(({ id }) => id === postId));
+
+    const { title, description, link } = this.state.feedsState.posts
+      .find(({ id }) => id === postId);
+    this.state.modalState = { title, description, link };
   };
 
   #updateFeeds = () => {
@@ -83,6 +86,10 @@ export default class Model {
       if (path === 'formState.input' || path === 'formState.validationCode') {
         View.renderForm(this);
         return;
+      }
+
+      if (path === 'modalState') {
+        View.renderModal(this);
       }
 
       const component = path.split('.')[1];

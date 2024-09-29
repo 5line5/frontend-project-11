@@ -48,6 +48,11 @@ function app() {
         },
       },
     },
+    modalState: {
+      title: undefined,
+      description: undefined,
+      link: undefined,
+    },
   };
 
   const model = new Model(initState);
